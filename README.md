@@ -1,7 +1,7 @@
 # slide_animated_password_lock
 
 A simple password input field with slide lock animation.
-![](slide_animated_password_lock.gif | width=50)
+![](slide_animated_password_lock.gif|width=50)
 
 ## Parameters
 `password` - Correct password value to trigger the sliding animation 
