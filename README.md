@@ -20,7 +20,7 @@ A simple password input field with slide lock animation.
 
 ## Getting Started
 Add the plugin:
-```
+```yaml
     dependencies:
         slide_animated_password_lock: ^1.0.0
 ```
@@ -28,7 +28,7 @@ Add the plugin:
 
 ## Basic Usage
 
-```
+```dart
  SlideAnimatedPasswordLock(
   password: _password,
   controller: _textFieldController,
