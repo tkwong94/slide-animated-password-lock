@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 
 class SlideAnimatedPasswordLock extends StatefulWidget {
   final TextEditingController controller;
+  final ValueChanged<bool> onUnlock;
   final Color color;
-  double width;
-  double height;
-  String placeholder;
+  final double width;
+  final double height;
+  final String placeholder;
   final String password;
 
   double slideSpace = 50;
@@ -15,12 +16,15 @@ class SlideAnimatedPasswordLock extends StatefulWidget {
   SlideAnimatedPasswordLock(
       {@required this.password,
       @required this.controller,
+      @required this.onUnlock,
       @required this.color,
-      width = 250,
-      height = 40,
-      placeholder = ''}) {
+      this.width = 250,
+      this.height = 40,
+      this.placeholder = ''}) {
+        print(this.width);
     assert(password != null && password.length > 0);
     assert(controller != null);
+    assert(onUnlock != null);
     assert(color != null);
     assert(width != null && width > slideSpace);
     assert(height != null && height > 2);
@@ -38,9 +42,11 @@ class _SlideAnimatedPasswordLockState extends State<SlideAnimatedPasswordLock> {
   void onSubmit(val) {
     if (val == widget.password) {
       setState(() => inputFieldLeftVal = widget.slideSpace);
+      widget.onUnlock(true);
     } else {
       setState(() => inputFieldLeftVal = 0);
       widget.controller.clear();
+      widget.onUnlock(false);
     }
   }
 
@@ -68,6 +74,8 @@ class _SlideAnimatedPasswordLockState extends State<SlideAnimatedPasswordLock> {
                   borderRadius: BorderRadius.all(Radius.circular(3)),
                   border: Border.all(color: widget.color)),
               child: TextField(
+                textAlign: TextAlign.center,
+                textAlignVertical: TextAlignVertical.center,
                 controller: widget.controller,
                 obscureText: true,
                 style: TextStyle(
