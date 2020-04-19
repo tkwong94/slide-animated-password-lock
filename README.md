@@ -1,6 +1,7 @@
 # slide_animated_password_lock
 
 A simple password input field with slide lock animation.
+
 <img src="slide_animated_password_lock.gif" width="200px">
 
 ## Parameters
