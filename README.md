@@ -28,7 +28,7 @@ A simple password input field with slide lock animation.
 Add the plugin:
 ```yaml
     dependencies:
-        slide_animated_password_lock: ^1.0.0
+        slide_animated_password_lock: ^0.0.3
 ```
 
 
