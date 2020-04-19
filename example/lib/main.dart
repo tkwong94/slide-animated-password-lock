@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:slide_animated_password_lock/slide_animated_password_lock.dart';
+import 'package:crypto/crypto.dart';
+import 'dart:convert'; 
+
 
 void main() => runApp(MyApp());
 
@@ -27,14 +30,16 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String _password = '111';
+  String _hashedPassword;
   final TextEditingController _textFieldController =
       new TextEditingController();
-
   String _msg = "Please unlock";
 
   @override
   void initState() {
     super.initState();
+    List<int> bytes = utf8.encode(_password); 
+    _hashedPassword = md5.convert(bytes).toString();
   }
 
   @override
@@ -45,7 +50,8 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
         SlideAnimatedPasswordLock(
-          password: _password,
+          hashedPassword: _hashedPassword,
+          hashMethod: HashMethod.MD5,
           controller: _textFieldController,
           color: Theme.of(context).primaryColor,
           placeholder: "HELLO WORLD",

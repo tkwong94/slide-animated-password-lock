@@ -1,6 +1,21 @@
 library slide_animated_password_lock;
 
 import 'package:flutter/material.dart';
+import 'package:crypto/crypto.dart';
+import 'dart:convert'; 
+
+enum HashMethod {
+  PlainText,
+  SHA1,
+  SHA224,
+  SHA256,
+  SHA384,
+  SHA512,
+  MD5,
+  HMACMD5,
+  HMACSHA1,
+  HMACSHA256
+}
 
 class SlideAnimatedPasswordLock extends StatefulWidget {
   final TextEditingController controller;
@@ -9,20 +24,30 @@ class SlideAnimatedPasswordLock extends StatefulWidget {
   final double width;
   final double height;
   final String placeholder;
-  final String password;
+  final String hashedPassword;
+  final HashMethod hashMethod;
+  final String hashKey;
 
   double slideSpace = 50;
 
   SlideAnimatedPasswordLock(
-      {@required this.password,
+      {@required this.hashedPassword,
+      @required this.hashMethod,
+      this.hashKey,
       @required this.controller,
       @required this.onUnlock,
       @required this.color,
       this.width = 250,
       this.height = 40,
       this.placeholder = ''}) {
-        print(this.width);
-    assert(password != null && password.length > 0);
+    print(this.width);
+    assert(hashedPassword != null && hashedPassword.length > 0);
+    assert(hashMethod != null);
+    if (hashMethod == HashMethod.HMACMD5 ||
+        hashMethod == HashMethod.HMACSHA1 ||
+        hashMethod == HashMethod.HMACSHA256) {
+      assert(hashKey != null && hashKey.length > 0);
+    }
     assert(controller != null);
     assert(onUnlock != null);
     assert(color != null);
@@ -39,8 +64,55 @@ class SlideAnimatedPasswordLock extends StatefulWidget {
 class _SlideAnimatedPasswordLockState extends State<SlideAnimatedPasswordLock> {
   double inputFieldLeftVal = 0;
 
-  void onSubmit(val) {
-    if (val == widget.password) {
+  String hashInput(_val) {
+    List<int> bytes = utf8.encode(_val); // data being hashed
+    Digest digest;
+
+    switch (widget.hashMethod) {
+      case HashMethod.PlainText:
+        return _val;
+
+      case HashMethod.SHA1:
+        digest = sha1.convert(bytes);
+        break;
+      case HashMethod.SHA224:
+        digest = sha224.convert(bytes);
+        break;
+      case HashMethod.SHA256:
+        digest = sha256.convert(bytes);
+        break;
+      case HashMethod.SHA384:
+        digest = sha384.convert(bytes);
+        break;
+      case HashMethod.SHA512:
+        digest = sha512.convert(bytes);
+        break;
+      case HashMethod.MD5:
+        digest = md5.convert(bytes);
+        break;
+      case HashMethod.HMACMD5:
+        List<int> key = utf8.encode(widget.hashKey);
+        Hmac hmacMd5 = new Hmac(md5, key);
+        digest = hmacMd5.convert(bytes);
+        break;
+      case HashMethod.HMACSHA1:
+        List<int> key = utf8.encode(widget.hashKey);
+        Hmac hmacSha1 = new Hmac(sha1, key);
+        digest = hmacSha1.convert(bytes);
+        break;
+      case HashMethod.HMACSHA256:
+        List<int> key = utf8.encode(widget.hashKey);
+        Hmac hmacSha256 = new Hmac(sha256, key);
+        digest = hmacSha256.convert(bytes);
+        break;
+    }
+    return digest.toString();
+  }
+
+  void onSubmit(_val) {
+    if (_val.length == 0) return;
+
+    if (hashInput(_val) == widget.hashedPassword) {
       setState(() => inputFieldLeftVal = widget.slideSpace);
       widget.onUnlock(true);
     } else {
@@ -89,8 +161,7 @@ class _SlideAnimatedPasswordLockState extends State<SlideAnimatedPasswordLock> {
                         EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                     border: InputBorder.none,
                     hintText: widget.placeholder,
-                    hintStyle:
-                        TextStyle(color: widget.color)),
+                    hintStyle: TextStyle(color: widget.color)),
                 onSubmitted: (val) => onSubmit(val),
               ),
             ),

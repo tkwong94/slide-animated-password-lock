@@ -5,9 +5,15 @@ A simple password input field with slide lock animation.
 <img src="slide_animated_password_lock.gif" width="200px">
 
 ## Parameters
-`password` - Correct password value to trigger the sliding animation 
+`hashedPassword` - Correct hashed password value to trigger the sliding animation 
+
+`hashMethod` - Hashed method using for the password. Options available:  HashMethod.PlainText/ HashMethod.SHA1/ HashMethod.SHA224/ HashMethod.SHA256/ HashMethod.SHA384/ HashMethod.SHA512/ HashMethod.MD5/ HashMethod.HMACMD5/ HashMethod.HMACSHA1/ HashMethod.HMACSHA256
+
+`hashKey` - (Optional) Hash key in use if using HashMethod.HMACMD5/ HashMethod.HMACSHA1/ HashMethod.HMACSHA256
 
 `controller` - Text Editing Controller for textfield
+
+`onUnlock` - Function handler when unlocked
 
 `color` - Color of the input field
 
@@ -30,7 +36,8 @@ Add the plugin:
 
 ```dart
  SlideAnimatedPasswordLock(
-  password: _password,
+  hashedPassword: _hashedPassword,
+  hashMethod: HashMethod.MD5,
   controller: _textFieldController,
   color: Theme.of(context).primaryColor,
   placeholder: "HELLO WORLD",
@@ -41,5 +48,5 @@ Add the plugin:
       setState(()=>_msg = "Please unlock!");
     }
   },
-)
+),
 ```

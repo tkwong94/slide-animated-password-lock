@@ -1,3 +1,5 @@
+## [0.0.3] - Support Password Hashing
+
 ## [0.0.2] 
 * Bug fix
 * Update Readme
