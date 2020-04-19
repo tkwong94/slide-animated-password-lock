@@ -1,6 +1,6 @@
 name: slide_animated_password_lock
 description: A simple password input field with slide lock animation.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/tkwong94/SlideAnimatedPasswordLock
 
 environment:
